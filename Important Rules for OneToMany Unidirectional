@@ -1,0 +1,38 @@
+---------------------------@JoinColumn Rules-------------------------------------------------
+
+
+The table in which it is found depends upon the context.
+
+- If the join is for a OneToOne or ManyToOne mapping using a foreign key mapping strategy, the foreign key column is in the table of the source entity or embeddable.
+
+- If the join is for a unidirectional OneToMany mapping using a foreign key mapping strategy, the foreign key is in the table of the target entity.
+
+- If the join is for a ManyToMany mapping or for a OneToOne or bidirectional ManyToOne/OneToMany mapping using a join table, the foreign key is in a join table.
+
+- If the join is for an element collection, the foreign key is in a collection table.
+
+--
+
+So as you can see, it depends on the context.
+
+
+
+
+-----------------------------------------------Instructors Replies-------------------------------------
+
+
+
+
+>>When we use @JoinColumn  (in case of one-to-many  unidirectional), Hibernate  creates a join table automatically which consists of FKs of Source and Target entities. Is that correct?
+
+I am not sure and I don't think it will create join table internally. But, When we use @JoinColumn (OneToMany Unidirectional), 
+Hibernate creates lot of queries to process.If you take a look at Hibernate flush order, 
+you’ll see that the persist action is executed before the collection elements are handled.
+This way, Hibernate inserts the child records first without the Foreign Key since the child entity does not store this information.
+During collection handling phase, the Foreign Key column is updated accordingly.
+
+So, If you are handling large volumes of data, it is recommended to use OneToMany bidirectional.
+
+:-)
+
+Let us know if that clears it up.
